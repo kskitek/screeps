@@ -17,11 +17,11 @@ jobs:
         branch: main
         token: ${{ secrets.token }}
 
-  push-slos:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Download sloctl
-    - name: Configure sloctl
-    - name: Set labels
-    - name: Push SLOs
-    - name: Annotate SLOs
+#  push-slos:
+#    runs-on: ubuntu-latest
+#    steps:
+#    - name: Download sloctl
+#    - name: Configure sloctl
+#    - name: Set labels
+#    - name: Push SLOs
+#    - name: Annotate SLOs
