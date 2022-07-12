@@ -1,5 +1,8 @@
 name: Push released code
-on: tags
+on:
+  push:
+    tags:
+    - v.*
 jobs:
   push-screeps:
     runs-on: ubuntu-latest
