@@ -71,19 +71,17 @@ module.exports.run = function(room) {
 
 module.exports.report = function() {
   const report = {
-    "spawning": {
-      "queueLength": {},
-    }
+    "spawning": {}
   };
 
-  for (let roomName in Game.rooms) {
-    const room = Game.rooms[roomName];
+  for (let r in Game.rooms) {
+    let room = Game.rooms[r];
 
     let len = 0;
     for (let role in room.memory.spawn) {
       len += room.memory.spawn[role].length;
     }
-    report["controller.spawning"].queueLength[roomName] = len;
+    report.spawning = { [room.name]: { queueLength: len } };
   }
 
   return report;

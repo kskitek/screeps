@@ -22,20 +22,25 @@ module.exports.run = function(room) {
   }
 }
 
-module.exports.report = function(room) {
-  let harvesters = room.find(FIND_MY_CREEPS, {
-    filter: c => c.memory.role === role
-  });
-
-  return {
-    "harvesting": {
-      [room.name]: {
-        harvesters: harvesters.length,
-        energy: room.energyAvailable,
-        capacity: room.energyCapacityAvailable
-      }
-    }
+module.exports.report = function() {
+  const report = {
+    "harvesting": {}
   };
+
+  for (let r in Game.rooms) {
+    let room = Game.rooms[r];
+    let harvesters = room.find(FIND_MY_CREEPS, {
+      filter: c => c.memory.role === role
+    });
+
+    report.harvesting[room.name] = {
+      harvesters: harvesters.length,
+      energy: room.energyAvailable,
+      capacity: room.energyCapacityAvailable
+    };
+  }
+
+  return report;
 }
 
 function getBody(room) {
