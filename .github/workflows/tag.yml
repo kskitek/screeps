@@ -1,0 +1,24 @@
+name: Push released code
+on: tags
+jobs:
+  push-screeps:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+
+    - name: Push the code
+      id: myaction
+      uses: kskitek/screeps-pusher@v0.1
+      with:
+        branch: main
+        token: ${{ secrets.token }}
+
+  push-slos:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download sloctl
+    - name: Configure sloctl
+    - name: Set labels
+    - name: Push SLOs
+    - name: Annotate SLOs
