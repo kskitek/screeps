@@ -27,6 +27,8 @@ function reportGlobals() {
       level: Game.gpl.level,
       progress: Game.gpl.progress
     },
-    pixels: Memory.pixels
+    pixels: {
+      generated: Memory.pixels
+    }
   }
 }
