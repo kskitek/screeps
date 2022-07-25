@@ -1,7 +1,8 @@
 name: Push experimental code
 on: pull_request
+
 jobs:
-  push:
+  push-code:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout

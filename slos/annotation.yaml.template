@@ -1,7 +1,7 @@
 apiVersion: n9/v1alpha
 kind: Annotation
 metadata:
-  name: $RELEASE_ESCAPED
+  name: release-$RELEASE_ESCAPED
   project: screeps
 spec:
   slo: $SLO_NAME
