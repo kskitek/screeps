@@ -1,0 +1,81 @@
+apiVersion: n9/v1alpha
+kind: Service
+metadata:
+  name: harvester
+  project: screeps
+spec:
+  description: ""
+---
+apiVersion: n9/v1alpha
+kind: SLO
+metadata:
+  displayName: Energy utilization
+  name: utilization
+  project: screeps
+spec:
+  service: harvester
+  description: |-
+    Query yields % of missing energy. It should be between 40% and 90%.
+    - More than 90% means mining is too slow.
+    - Less than 40% means the energy is underutilized.
+  alertPolicies: []
+  budgetingMethod: Occurrences
+  indicator:
+    metricSource:
+      kind: Direct
+      name: screeps
+      project: screeps
+  objectives:
+  - displayName: undermined
+    op: lte
+    rawMetric:
+      query:
+        influxdb:
+          query: |-
+            capacity = from(bucket: "screeps")
+              |> range(start: time(v: params.n9time_start), stop: time(v: params.n9time_stop))
+              |> filter(fn: (r) => r["_measurement"] == "harvesting")
+              |> filter(fn: (r) => r["_field"] == "capacity")
+              |> aggregateWindow(every: 15s, fn: mean, createEmpty: false)
+
+            energy = from(bucket: "screeps")
+              |> range(start: time(v: params.n9time_start), stop: time(v: params.n9time_stop))
+              |> filter(fn: (r) => r["_measurement"] == "harvesting")
+              |> filter(fn: (r) => r["_field"] == "energy")
+              |> aggregateWindow(every: 15s, fn: mean, createEmpty: false)
+
+            join(tables: {capacity: capacity, energy: energy}, on: ["_time"])
+                |> map(fn: (r) => ({_time: r._time, missingEnergy: r._value_capacity - r._value_energy, capacity: r._value_capacity}))
+                |> map(fn: (r) => ({r with _value: r.missingEnergy * 100.0 / r.capacity }))
+    target: 0.93
+    value: 90
+  - displayName: underutilized
+    op: gte
+    rawMetric:
+      query:
+        influxdb:
+          query: |-
+            capacity = from(bucket: "screeps")
+              |> range(start: time(v: params.n9time_start), stop: time(v: params.n9time_stop))
+              |> filter(fn: (r) => r["_measurement"] == "harvesting")
+              |> filter(fn: (r) => r["_field"] == "capacity")
+              |> aggregateWindow(every: 15s, fn: mean, createEmpty: false)
+
+            energy = from(bucket: "screeps")
+              |> range(start: time(v: params.n9time_start), stop: time(v: params.n9time_stop))
+              |> filter(fn: (r) => r["_measurement"] == "harvesting")
+              |> filter(fn: (r) => r["_field"] == "energy")
+              |> aggregateWindow(every: 15s, fn: mean, createEmpty: false)
+
+            join(tables: {capacity: capacity, energy: energy}, on: ["_time"])
+                |> map(fn: (r) => ({_time: r._time, missingEnergy: r._value_capacity - r._value_energy, capacity: r._value_capacity}))
+                |> map(fn: (r) => ({r with _value: r.missingEnergy * 100.0 / r.capacity }))
+    target: 0.93
+    value: 40
+  timeWindows:
+  - count: 7
+    isRolling: true
+    period:
+      begin: "2022-07-18T20:00:51Z"
+      end: "2022-07-25T20:00:51Z"
+    unit: Day

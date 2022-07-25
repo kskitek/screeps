@@ -1,0 +1,44 @@
+apiVersion: n9/v1alpha
+kind: Service
+metadata:
+  name: spawner
+  project: screeps
+spec:
+  description: ""
+---
+apiVersion: n9/v1alpha
+kind: SLO
+metadata:
+  name: queue-len
+  project: screeps
+spec:
+  service: spawner
+  description: Spawner queue length
+  alertPolicies: []
+  budgetingMethod: Occurrences
+  indicator:
+    metricSource:
+      kind: Direct
+      name: screeps
+      project: screeps
+  objectives:
+  - displayName: ""
+    op: lt
+    rawMetric:
+      query:
+        influxdb:
+          query: |-
+            from(bucket: "screeps")
+              |> range(start: time(v: params.n9time_start), stop: time(v: params.n9time_stop))
+              |> filter(fn: (r) => r["_measurement"] == "spawning")
+              |> filter(fn: (r) => r["_field"] == "queueLength")
+              |> aggregateWindow(every: 15s, fn: max, createEmpty: false)
+    target: 0.995
+    value: 3
+  timeWindows:
+  - count: 1
+    isRolling: true
+    period:
+      begin: "2022-07-24T20:00:51Z"
+      end: "2022-07-25T20:00:51Z"
+    unit: Day
