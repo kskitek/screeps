@@ -1,5 +1,6 @@
 let harvesting = require("controller.harvesting");
 let spawning = require("controller.spawning");
+let upgrading = require("controller.upgrading");
 
 module.exports.run = function() {
   if (Game.time % 10) {
@@ -8,6 +9,7 @@ module.exports.run = function() {
       "global": reportGlobals(),
       ...harvesting.report(),
       ...spawning.report(),
+      ...upgrading.report(),
     };
   }
 }

@@ -1,4 +1,5 @@
 let upgrader = require("role.upgrader");
+let spawning = require("controller.spawning");
 
 const role = "upgrader";
 
@@ -8,9 +9,10 @@ module.exports.dispatch = function(room) {
     filter: c => c.memory.role === role
   });
 
-  let maxUpgraders = room.controller.level == 8 ? 1 : sources.length*2;
-  if ( creeps.length < maxUpgraders) {
-    request(room, [MOVE, MOVE, CARRY, WORK], {});
+  let maxUpgraders = room.controller.level == 8 ? 1 : sources.length * 2;
+  let creepsToSpawn = maxUpgraders - creeps.length;
+  for (let i = 0; i < creepsToSpawn; i++) {
+    spawning.requestSpawn(room, role, getBody(room), {});
   }
 
   for (let c in creeps) {
@@ -18,14 +20,26 @@ module.exports.dispatch = function(room) {
   }
 }
 
-module.exports.report = function(room) {
+function getBody(room) {
+  // TODO body based on room.controller.level or energyCapacity
+  return [MOVE, MOVE, CARRY, WORK];
 }
 
-function request(room, body, mem) {
-  Memory.requests.spawn.push({
-    room: room.name,
-    body: body,
-    mem: mem,
-    role: role
-  })
+module.exports.report = function() {
+  const report = {
+    "upgrading": {}
+  };
+
+  for (let r in Game.rooms) {
+    let room = Game.rooms[r];
+    let ctrl = room.controller;
+
+    report.upgrading[room.name] = {
+      level: ctrl.level,
+      progress: ctrl.progress,
+      ticksToDowngrade: ctrl.ticksToDowngrade,
+    };
+  }
+
+  return report;
 }
