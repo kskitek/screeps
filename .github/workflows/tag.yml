@@ -2,7 +2,7 @@ name: Push released code
 on:
   push:
     tags:
-    - v*
+    - v**
 
 env:
   SLOCTL_VERSION: "0.0.72"
