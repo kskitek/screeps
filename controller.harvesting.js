@@ -10,8 +10,7 @@ module.exports.run = function(room) {
   });
   let requestedCreeps = spawning.getRequestedSpawns(room, role);
 
-  const creepsToSpawn = sources * 2 - (creeps.length + requestedCreeps);
-  console.log("harvesting", sources * 2, creeps.length, requestedCreeps);
+  const creepsToSpawn = sources * 2 - (creeps.length + requestedCreeps.length);
   for (let i = 0; i < creepsToSpawn; i++) {
     spawning.requestSpawn(room, role, getBody(room), {});
   }

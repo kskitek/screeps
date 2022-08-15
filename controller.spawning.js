@@ -15,6 +15,7 @@ module.exports.requestSpawn = function(room, role, body, mem) {
   });
 }
 
+// TODO provide instead amethod to `spawnUpToXCreeps` that takes queue len into consideration
 module.exports.getRequestedSpawns = function(room, role) {
   initMem(room);
 
