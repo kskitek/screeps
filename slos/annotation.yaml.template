@@ -1,0 +1,10 @@
+apiVersion: n9/v1alpha
+kind: Annotation
+metadata:
+  name: release-$RELEASE_ESCAPED
+  project: screeps
+spec:
+  slo: $SLO_NAME
+  description: "Release $RELEASE"
+  startTime: "$DATE"
+  endTime: "$DATE"

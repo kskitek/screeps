@@ -1,0 +1,16 @@
+name: Push experimental code
+on: pull_request
+
+jobs:
+  push-code:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+
+    - name: Push the code
+      id: myaction
+      uses: kskitek/screeps-pusher@v0.1
+      with:
+        branch: experimental
+        token: ${{ secrets.token }}
