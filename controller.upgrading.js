@@ -3,7 +3,7 @@ let spawning = require("controller.spawning");
 
 const role = "upgrader";
 
-module.exports.dispatch = function(room) {
+module.exports.run = function(room) {
   let sources = room.find(FIND_SOURCES).length;
   let creeps = room.find(FIND_MY_CREEPS, {
     filter: c => c.memory.role === role

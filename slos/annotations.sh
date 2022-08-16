@@ -17,4 +17,4 @@ done
 
 cat annotations.yaml
 # ./sloctl apply -f annotations.yaml
-sloctl get annotations -p $PROJECT
+./sloctl get annotations -p $PROJECT
