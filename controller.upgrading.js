@@ -3,14 +3,15 @@ let spawning = require("controller.spawning");
 
 const role = "upgrader";
 
-module.exports.dispatch = function(room) {
+module.exports.run = function(room) {
   let sources = room.find(FIND_SOURCES).length;
   let creeps = room.find(FIND_MY_CREEPS, {
     filter: c => c.memory.role === role
   });
+  let requestedCreeps = spawning.getRequestedSpawns(room, role);
 
   let maxUpgraders = room.controller.level == 8 ? 1 : sources.length * 2;
-  let creepsToSpawn = maxUpgraders - creeps.length;
+  let creepsToSpawn = maxUpgraders - (creeps.length + requestedCreeps.length);
   for (let i = 0; i < creepsToSpawn; i++) {
     spawning.requestSpawn(room, role, getBody(room), {});
   }
