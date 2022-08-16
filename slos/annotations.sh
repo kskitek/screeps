@@ -12,9 +12,8 @@ do
   export SLO_NAME
   printf "Annotating $SLO_NAME\n"
   envsubst < slos/annotation.yaml.template >> annotations.yaml
-  echo "---" >> annotations.yaml
+  annotations.yaml
 done
 
 cat annotations.yaml
 # ./sloctl apply -f annotations.yaml
-./sloctl get annotations -p $PROJECT
