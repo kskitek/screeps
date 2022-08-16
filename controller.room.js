@@ -1,4 +1,5 @@
 let harvesting = require("controller.harvesting");
+let upgrading = require("controller.upgrading");
 let spawning = require("controller.spawning");
 
 module.exports.run = function(room) {
@@ -7,9 +8,10 @@ module.exports.run = function(room) {
     Game.notify("Hostiles in the room!");
   }
 
-  switch(room.level) {
+  switch (room.level) {
     default:
       harvesting.run(room);
+      upgrading.run(room);
   }
 
   spawning.run(room);

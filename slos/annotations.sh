@@ -1,5 +1,6 @@
 #!/bin/sh
 
+RELEASE=test
 export RELEASE_ESCAPED=$(echo $RELEASE | sed 's/\./-/g')
 export DATE=$(date --iso-8601=seconds)
 
@@ -14,4 +15,6 @@ do
   echo "---" >> annotations.yaml
 done
 
-./sloctl apply -f annotations.yaml
+cat annotations.yaml
+# ./sloctl apply -f annotations.yaml
+sloctl get annotations -p $PROJECT
