@@ -1,0 +1,46 @@
+apiVersion: n9/v1alpha
+kind: Service
+metadata:
+  name: defender
+  project: screeps
+spec:
+  description: ""
+---
+apiVersion: n9/v1alpha
+kind: SLO
+metadata:
+  displayName: Defence effectiveness
+  name: defence-effectiveness
+  project: screeps
+spec:
+  service: defender
+  description: |-
+    Enemies should not be occuping my rooms for too long.
+  alertPolicies: []
+  budgetingMethod: Occurrences
+  indicator:
+    metricSource:
+      kind: Direct
+      name: screeps
+      project: screeps
+  objectives:
+  - displayName: enemies-in-rooms
+    op: lt
+    rawMetric:
+      query:
+        influxdb:
+          query: |-
+            from(bucket: "screeps")
+              |> range(start: time(v: params.n9time_start), stop: time(v: params.n9time_stop))
+              |> filter(fn: (r) => r["_measurement"] == "defending")
+              |> filter(fn: (r) => r["_field"] == "enemies")
+              |> aggregateWindow(every: 15s, fn: max, createEmpty: false)
+    target: 0.95
+    value: 1
+  timeWindows:
+  - count: 7
+    isRolling: true
+    period:
+      begin: "2022-08-15T00:00:00Z"
+      end: "2022-08-22T00:00:00Z"
+    unit: Day
