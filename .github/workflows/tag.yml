@@ -5,7 +5,7 @@ on:
     - v**
 
 env:
-  SLOCTL_VERSION: "0.0.72"
+  SLOCTL_VERSION: "0.0.87"
 
 jobs:
   push-screeps:
@@ -30,8 +30,9 @@ jobs:
     - name: Download sloctl
       run: |-
         echo "Downloading sloctl $SLOCTL_VERSION"
-        wget https://github.com/nobl9/sloctl/raw/main/sloctl-linux-$SLOCTL_VERSION.zip -O sloctl.zip
-        unzip sloctl.zip
+        wget https://github.com/nobl9/sloctl/releases/download/v$SLOCTL_VERSION/sloctl-linux-$SLOCTL_VERSION -O sloctl
+        chmod +x sloctl
+        ./sloctl version
 
     - name: Setup config.toml
       run: |-
